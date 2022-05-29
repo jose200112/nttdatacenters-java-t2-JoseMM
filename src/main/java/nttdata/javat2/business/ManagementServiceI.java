@@ -10,18 +10,18 @@ public interface ManagementServiceI {
 	/**
 	 * Metodo que da de alta empleados si hay plaza
 	 * @param name (nombre de empleado)
-	 * @param category (categoria de empleado)
+	 * @param rank (categoria de empleado)
 	 */
-	public void joinEmployee(String name, String category);
+	public void addNewEmployee(String name, String rank);
 	
 	/**
 	 * Metodo que muestra todos los empleados
 	 */
-	public void showAllEmployees();
+	public void printAllEmployees();
 	
 	/**
 	 * Metodo que muestra el total de empleados
 	 */
-	public void showTotalEmployees();
+	public void printEmployeesTotalNum();
 
 }

@@ -4,108 +4,93 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Clase que implementa la interfaz con metodos para la gestion de empleados
+ * 
  * @author jose
  *
  */
 public class ManagementServiceImpl implements ManagementServiceI {
 
-	private Map<String, String> company = new HashMap<String, String>();
-	private StringBuilder sb = new StringBuilder();
-	private int vacancy = 10;
+	private static final Logger LOG = LoggerFactory.getLogger(ManagementServiceImpl.class);
+	private Map<Integer, Employee> database = new HashMap<>();
+	private Integer genID = 0;
 
 	/**
 	 * Metodo que registra empleados si hay plazas
 	 * 
-	 * @param name (nombre de empleado)
-	 * @param category (categoria de empleado)
+	 * @param name     (nombre de empleado)
+	 * @param rank (categoria de empleado)
 	 */
-	public void joinEmployee(String name, String category) {
-		if (vacancy > 0) {
-			if (company.containsKey(name)) {
-				System.out.println("Este empleado ya esta registrado");
-			} else {
-				vacancy--;
-				company.put(name, category);
+	public void addNewEmployee(String name, String rank) {
 
-				// concatenamos
-				sb.delete(0, sb.length());
-				sb.append("Empleado registrado, quedan ");
-				sb.append(vacancy);
-				sb.append(" plazas");
-				String result = sb.toString();
-				System.out.println(result);
-			}
+		// Generamos el ID
+		genID++;
+
+		// Creamos el objeto
+		Employee e = new Employee(genID, name, rank);
+
+		// Restamos la constante con el numero de empleados en el mapa
+		int count = Employee.getMaxNumEmployees() - database.size();
+
+		if (count > 0) {
+
+			// Metemos el objeto y su ID en el mapa
+			database.put(e.getId(), e);
+
+			LOG.info("Empleado registrado, quedan {} vacantes", count - 1);
+
 		} else {
-			System.out.println("Ya no quedan mas plazas");
+			LOG.info("Supera el limite de empleados");
 		}
 
 	}
 
 	/**
-	 * Metodo que muestra todos los empleados
+	 * Metodo que imprime todos los empleados
 	 */
-	public void showAllEmployees() {
+	public void printAllEmployees() {
 		// Declaramos iterador y recorremos el mapa
-		Iterator<String> iter = company.keySet().iterator();
+		Iterator<Integer> iter = database.keySet().iterator();
 		while (iter.hasNext()) {
-			String name = (String) iter.next();
-			String category = company.get(name);
 
-			// concatenamos
-			sb.delete(0, sb.length());
-			sb.append("Nombre: ");
-			sb.append(name);
-			sb.append(" Categoria: ");
-			sb.append(category);
-			String result = sb.toString();
-			System.out.println(result);
+			System.out.println(database.get(iter.next()));
 		}
 
+	}
+	
+	/**
+	 * Metodo que da de baja a un empleado
+	 * @param id (ID)
+	 */
+	public void deleteEmployee(Integer id) {
+		if (database.containsKey(id)) {
+			database.remove(id);
+			LOG.info("Empleado dado de baja con exito");
+		} else {
+			LOG.info("El empleado no existe");
+		}
 	}
 
 	/**
 	 * Metodo que muestra el total de empleados
 	 */
-	public void showTotalEmployees() {
-		System.out.println(company.size());
-
+	public void printEmployeesTotalNum() {
+		System.out.println(database.size());
 	}
 
 	/**
-	 * Metodo que da de baja a empleado
-	 * 
-	 * @param name (nombre de empleado)
+	 * Metodo que comprueba si un empleado esta de alta
+	 * @param id (ID)
 	 */
-	public void resignEmployee(String name) {
-		if (company.containsKey(name)) {
-			company.remove(name);
-			System.out.println("Empleado dado de baja con exito");
-			vacancy++;
+	public void containsEmployee(Integer id) {
+		if (database.containsKey(id)) {
+			LOG.info("{}, se encuentra de alta", database.get(id));
 		} else {
-			System.out.println("Empleado no encontrado");
-		}
-	}
-
-	/**
-	 * Metodo que indica si un empleado se encuentra de alta
-	 * 
-	 * @param name (nombre de empleado)
-	 */
-	public void containsEmployee(String name) {
-		if (company.containsKey(name)) {
-
-			// concatenamos
-			sb.delete(0, sb.length());
-			sb.append("Si, el empleado ");
-			sb.append(name);
-			sb.append(" se encuentra de alta");
-			String result = sb.toString();
-			System.out.println(result);
-
-		} else {
-			System.out.println("Empleado no encontrado");
+			LOG.info("Ese empleado no se encuentra de alta");
 		}
 	}
 
