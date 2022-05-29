@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class ManagementServiceImpl implements ManagementServiceI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManagementServiceImpl.class);
-	private Map<Integer, Employee> database = new HashMap<>();
+	private Map<Integer, Employee> database = new HashMap<Integer, Employee>();
 	private Integer genID = 0;
 
 	/**
