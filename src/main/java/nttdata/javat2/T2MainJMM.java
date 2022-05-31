@@ -8,7 +8,7 @@ import nttdata.javat2.business.ManagementServiceImpl;
  * @author jose
  *
  */
-public class T2MainJoseMM {
+public class T2MainJMM {
 
 	/**
 	 * Metodo main que demuestra el correcto funcionamiento
